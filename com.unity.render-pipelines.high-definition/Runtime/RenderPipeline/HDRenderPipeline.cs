@@ -1155,7 +1155,7 @@ namespace UnityEngine.Rendering.HighDefinition
                     }
 
                     dynResHandler.SetCurrentCameraRequest(cameraRequestedDynamicRes);
-                    dynResHandler.allowDynamicResolutionOnAllPercentages = hdCam != null && hdCam.cameraCanRenderDLSS;
+                    dynResHandler.runUpscalerFilterOnFullResolution = hdCam != null && hdCam.cameraCanRenderDLSS;
 
                     RTHandles.SetHardwareDynamicResolutionState(dynResHandler.HardwareDynamicResIsEnabled());
 
