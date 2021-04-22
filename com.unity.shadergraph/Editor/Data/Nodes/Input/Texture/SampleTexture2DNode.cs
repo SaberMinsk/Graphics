@@ -33,6 +33,9 @@ namespace UnityEditor.ShaderGraph
         const string kTextureInputName = "Texture";
         const string kUVInputName = "UV";
         const string kSamplerInputName = "Sampler";
+        const string kDefaultSampleMacro = "SAMPLE_TEXTURE2D";
+        const string kSampleMacroNoBias  = "PLATFORM_SAMPLE_TEXTURE2D";
+
 
         public override bool hasPreview { get { return true; } }
 
@@ -78,6 +81,23 @@ namespace UnityEditor.ShaderGraph
             }
         }
 
+        [SerializeField]
+        private bool m_DisableGlobalMipBias = false; 
+
+        [ToggleControl("Disable Global Mip Bias")]
+        public ToggleData DisableGlobalMipBias 
+        {
+            get { return new ToggleData(m_DisableGlobalMipBias); }
+            set
+            {
+                if (m_DisableGlobalMipBias == value.isOn)
+                    return;
+
+                m_DisableGlobalMipBias = value.isOn;
+                Dirty(ModificationScope.Graph);
+            }
+        }
+
         public sealed override void UpdateNodeAfterDeserialization()
         {
             AddSlot(new Vector4MaterialSlot(OutputSlotRGBAId, kOutputSlotRGBAName, kOutputSlotRGBAName, SlotType.Output, Vector4.zero, ShaderStageCapability.Fragment));
@@ -108,8 +128,9 @@ namespace UnityEditor.ShaderGraph
             var edgesSampler = owner.GetEdges(samplerSlot.slotReference);
 
             var id = GetSlotValue(TextureInputId, generationMode);
-            var result = string.Format("$precision4 {0} = SAMPLE_TEXTURE2D({1}.tex, {2}.samplerstate, {3});"
+            var result = string.Format("$precision4 {0} = {1}({2}.tex, {3}.samplerstate, {4});"
                 , GetVariableNameForSlot(OutputSlotRGBAId)
+                , m_DisableGlobalMipBias ? kSampleMacroNoBias : kDefaultSampleMacro
                 , id
                 , edgesSampler.Any() ? GetSlotValue(SamplerInput, generationMode) : id
                 , uvName);
