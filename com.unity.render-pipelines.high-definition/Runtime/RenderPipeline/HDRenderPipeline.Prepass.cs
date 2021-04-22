@@ -235,6 +235,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 // At this point in forward all objects have been rendered to the prepass (depth/normal/motion vectors) so we can resolve them
                 ResolvePrepassBuffers(renderGraph, hdCamera, ref result);
 
+                ApplyCameraMipBias(hdCamera);
+
                 RenderDBuffer(renderGraph, hdCamera, decalBuffer, ref result, cullingResults);
 
                 RenderGBuffer(renderGraph, sssBuffer, vtFeedbackBuffer, ref result, cullingResults, hdCamera);
@@ -257,6 +259,8 @@ namespace UnityEngine.Rendering.HighDefinition
                     SystemInfo.graphicsDeviceType == GraphicsDeviceType.GameCoreXboxSeries;
 
                 mip1FromDownsampleForLowResTrans = mip1FromDownsampleForLowResTrans && hdCamera.frameSettings.IsEnabled(FrameSettingsField.LowResTransparent);
+
+                ResetCameraMipBias(hdCamera);
 
                 DownsampleDepthForLowResTransparency(renderGraph, hdCamera, mip1FromDownsampleForLowResTrans, ref result);
 

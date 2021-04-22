@@ -78,15 +78,7 @@ namespace UnityEngine.Rendering.HighDefinition
             lightingBuffers.diffuseLightingBuffer = CreateDiffuseLightingBuffer(m_RenderGraph, hdCamera.msaaSamples);
             lightingBuffers.sssBuffer = CreateSSSBuffer(m_RenderGraph, hdCamera, hdCamera.msaaSamples);
 
-            if (m_CurrentDebugDisplaySettings != null && m_CurrentDebugDisplaySettings.data.UseDebugGlobalMipBiasOverride())
-            {
-                float globalMaterialMipBias = m_CurrentDebugDisplaySettings.data.GetDebugGlobalMipBiasOverride();
-                PushCameraGlobalMipBias(m_RenderGraph, hdCamera, globalMaterialMipBias);
-            }
-
             var prepassOutput = RenderPrepass(m_RenderGraph, colorBuffer, lightingBuffers.sssBuffer, vtFeedbackBuffer, cullingResults, customPassCullingResults, hdCamera, aovRequest, aovBuffers);
-
-            PushCameraGlobalMipBias(m_RenderGraph, hdCamera, 0.0f);
 
             // Need this during debug render at the end outside of the main loop scope.
             // Once render graph move is implemented, we can probably remove the branch and this.
@@ -169,7 +161,11 @@ namespace UnityEngine.Rendering.HighDefinition
 
                 var deferredLightingOutput = RenderDeferredLighting(m_RenderGraph, hdCamera, colorBuffer, prepassOutput.depthBuffer, prepassOutput.depthPyramidTexture, lightingBuffers, prepassOutput.gbuffer, shadowResult, gpuLightListOutput);
 
+                ApplyCameraMipBias(hdCamera);
+
                 RenderForwardOpaque(m_RenderGraph, hdCamera, colorBuffer, lightingBuffers, gpuLightListOutput, prepassOutput.depthBuffer, vtFeedbackBuffer, shadowResult, prepassOutput.dbuffer, cullingResults);
+
+                ResetCameraMipBias(hdCamera);
 
                 if (aovRequest.isValid)
                     aovRequest.PushCameraTexture(m_RenderGraph, AOVBuffers.Normals, hdCamera, prepassOutput.resolvedNormalBuffer, aovBuffers);
@@ -388,6 +384,17 @@ namespace UnityEngine.Rendering.HighDefinition
             }
         }
 
+        void ApplyCameraMipBias(HDCamera hdCamera)
+        {
+            if (m_CurrentDebugDisplaySettings != null && m_CurrentDebugDisplaySettings.data.UseDebugGlobalMipBiasOverride())
+            {
+                float globalMaterialMipBias = m_CurrentDebugDisplaySettings.data.GetDebugGlobalMipBiasOverride();
+                PushCameraGlobalMipBiasPass(m_RenderGraph, hdCamera, globalMaterialMipBias);
+            }
+        }
+
+        void ResetCameraMipBias(HDCamera hdCamera) => PushCameraGlobalMipBiasPass(m_RenderGraph, hdCamera, 0.0f);
+
         class PushCameraGlobalMipBiasData
         {
             public HDCamera hdCamera;
@@ -396,7 +403,7 @@ namespace UnityEngine.Rendering.HighDefinition
             public ShaderVariablesXR        xrCB;
         }
 
-        void PushCameraGlobalMipBias(RenderGraph renderGraph, HDCamera hdCamera, float mipBias)
+        void PushCameraGlobalMipBiasPass(RenderGraph renderGraph, HDCamera hdCamera, float mipBias)
         {
             if (!ShaderConfig.s_GlobalMipBias)
                 return;
@@ -1047,7 +1054,11 @@ namespace UnityEngine.Rendering.HighDefinition
             SetGlobalColorForCustomPass(renderGraph, currentColorPyramid);
 
             // Render pre-refraction objects
+            ApplyCameraMipBias(hdCamera);
+
             RenderForwardTransparent(renderGraph, hdCamera, colorBuffer, normalBuffer, prepassOutput, vtFeedbackBuffer, volumetricLighting, ssrLightingBuffer, null, lightLists, shadowResult, cullingResults, true);
+
+            ResetCameraMipBias(hdCamera);
 
             if (hdCamera.frameSettings.IsEnabled(FrameSettingsField.Refraction) || hdCamera.IsSSREnabled())
             {
@@ -1059,7 +1070,9 @@ namespace UnityEngine.Rendering.HighDefinition
             RenderCustomPass(m_RenderGraph, hdCamera, colorBuffer, prepassOutput, customPassCullingResults, cullingResults, CustomPassInjectionPoint.BeforeTransparent, aovRequest, aovCustomPassBuffers);
 
             // Render all type of transparent forward (unlit, lit, complex (hair...)) to keep the sorting between transparent objects.
+            ApplyCameraMipBias(hdCamera);
             RenderForwardTransparent(renderGraph, hdCamera, colorBuffer, normalBuffer, prepassOutput, vtFeedbackBuffer, volumetricLighting, ssrLightingBuffer, currentColorPyramid, lightLists, shadowResult, cullingResults, false);
+            ResetCameraMipBias(hdCamera);
 
             colorBuffer = ResolveMSAAColor(renderGraph, hdCamera, colorBuffer, m_NonMSAAColorBuffer);
 
@@ -1068,7 +1081,9 @@ namespace UnityEngine.Rendering.HighDefinition
 
             if (hdCamera.frameSettings.IsEnabled(FrameSettingsField.LowResTransparent))
             {
+                ApplyCameraMipBias(hdCamera);
                 var lowResTransparentBuffer = RenderLowResTransparent(renderGraph, hdCamera, prepassOutput.downsampledDepthBuffer, cullingResults);
+                ResetCameraMipBias(hdCamera);
                 UpsampleTransparent(renderGraph, hdCamera, colorBuffer, lowResTransparentBuffer, prepassOutput.downsampledDepthBuffer);
             }
 
