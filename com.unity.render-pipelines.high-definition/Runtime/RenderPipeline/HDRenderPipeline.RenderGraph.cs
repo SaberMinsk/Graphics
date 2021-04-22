@@ -386,11 +386,16 @@ namespace UnityEngine.Rendering.HighDefinition
 
         void ApplyCameraMipBias(HDCamera hdCamera)
         {
+            float globalMaterialMipBias = 0.0f;
             if (m_CurrentDebugDisplaySettings != null && m_CurrentDebugDisplaySettings.data.UseDebugGlobalMipBiasOverride())
             {
-                float globalMaterialMipBias = m_CurrentDebugDisplaySettings.data.GetDebugGlobalMipBiasOverride();
-                PushCameraGlobalMipBiasPass(m_RenderGraph, hdCamera, globalMaterialMipBias);
+                globalMaterialMipBias = m_CurrentDebugDisplaySettings.data.GetDebugGlobalMipBiasOverride();
             }
+            else
+            {
+                globalMaterialMipBias = hdCamera.globalMipBias;
+            }
+            PushCameraGlobalMipBiasPass(m_RenderGraph, hdCamera, globalMaterialMipBias);
         }
 
         void ResetCameraMipBias(HDCamera hdCamera) => PushCameraGlobalMipBiasPass(m_RenderGraph, hdCamera, 0.0f);
