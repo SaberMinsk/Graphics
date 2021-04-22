@@ -228,6 +228,19 @@ The **Color Picker** works with whichever debug mode HDRP displays at the time. 
 | **Freeze Camera for Culling** | Use the drop-down to select a Camera to freeze in order to check its culling. To check if the Camera's culling works correctly, freeze the Camera and move occluders around it. |
 | **Enable Render Graph**       | Enable the checkbox to use the Render Graph for rendering. |
 
+The **NVIDIA device debug view** is a panel that shows a list of the current feature states of the NVIDIA Deep Learning Super Sampling (DLSS). Each row represents an avtive screen in which DLSS is running.
+| **Information**          | **Description**    |
+| ------------------------ | ------------------ |
+| **NVUnityPlugin Version**| Shows the current internal version id of the NVIDIA Unity Plugin that interacts with DLSS |
+| **NGX API Version**      | Shows the actual version which DLSS operates on |
+| **Device Status**        | Shows the current status of the NVIDIA driver. If there has been an internal error initializing the driver it will be displayed here. |
+| **DLSS Supported**       | Shows True or False depending if DLSS is supported at runtime. |
+| **DLSS Slot ID**         | Shows an internal ID for the particular DLSS view being displayed |
+| **Status**               | Shows wether the view is **valid** or **invalid**. DLSS invalid views occurs when there is an internal error, or bad parameters are passed from the scriptable rendering pipeline. |
+| **Input resolution**     | Shows the current input resolution, which is calculated from the screen percentage specified for dynamic resolution scaling |
+| **Output resolution**    | Shows the target resolution for this particular DLSS view. |
+| **Quality**              | Shows the quality selected for this particular DLSS view.  |
+
 <a name="CameraPanel"></a>
 
 ## Camera panels
