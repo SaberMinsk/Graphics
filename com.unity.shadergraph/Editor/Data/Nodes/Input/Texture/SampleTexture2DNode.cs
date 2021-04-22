@@ -82,10 +82,10 @@ namespace UnityEditor.ShaderGraph
         }
 
         [SerializeField]
-        private bool m_DisableGlobalMipBias = false; 
+        private bool m_DisableGlobalMipBias = false;
 
         [ToggleControl("Disable Global Mip Bias")]
-        public ToggleData DisableGlobalMipBias 
+        public ToggleData DisableGlobalMipBias
         {
             get { return new ToggleData(m_DisableGlobalMipBias); }
             set

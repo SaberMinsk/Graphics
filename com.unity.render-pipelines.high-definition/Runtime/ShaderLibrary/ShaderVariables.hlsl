@@ -203,25 +203,23 @@ TEXTURE2D(_PrevExposureTexture);
         #endif
     #endif
 
+    //sample of texture cubemap array
+    #ifdef PLATFORM_SAMPLE_TEXTURECUBE_ARRAY_BIAS
+
+        #ifdef  SAMPLE_TEXTURECUBE_ARRAY
+            #undef  SAMPLE_TEXTURECUBE_ARRAY
+            #define SAMPLE_TEXTURECUBE_ARRAY(textureName, samplerName, coord3, index)\
+                PLATFORM_SAMPLE_TEXTURECUBE_ARRAY_BIAS(textureName, samplerName, coord3, index, _GlobalMipBias)
+        #endif
+
+        #ifdef  SAMPLE_TEXTURECUBE_ARRAY_BIAS
+            #undef  SAMPLE_TEXTURECUBE_ARRAY_BIAS
+            #define SAMPLE_TEXTURECUBE_ARRAY_BIAS(textureName, samplerName, coord3, index, bias)\
+                PLATFORM_SAMPLE_TEXTURECUBE_ARRAY_BIAS(textureName, samplerName, coord3, index, (bias + _GlobalMipBias))
+        #endif
+    #endif
+
 #endif
-
-//sample of texture cubemap array
-#ifdef PLATFORM_SAMPLE_TEXTURECUBE_ARRAY_BIAS
-
-#ifdef  SAMPLE_TEXTURECUBE_ARRAY
-#undef  SAMPLE_TEXTURECUBE_ARRAY
-#define SAMPLE_TEXTURECUBE_ARRAY(textureName, samplerName, coord3, index)\
-    PLATFORM_SAMPLE_TEXTURECUBE_ARRAY_BIAS(textureName, samplerName, coord3, index, _GlobalMipBias)
-#endif
-
-#ifdef  SAMPLE_TEXTURECUBE_ARRAY_BIAS
-#undef  SAMPLE_TEXTURECUBE_ARRAY_BIAS
-#define SAMPLE_TEXTURECUBE_ARRAY_BIAS(textureName, samplerName, coord3, index, bias)\
-    PLATFORM_SAMPLE_TEXTURECUBE_ARRAY_BIAS(textureName, samplerName, coord3, index, (bias + _GlobalMipBias))
-#endif
-
-#endif
-
 
 // Note: To sample camera depth in HDRP we provide these utils functions because the way we store the depth mips can change
 // Currently it's an atlas and it's layout can be found at ComputePackedMipChainInfo in HDUtils.cs
