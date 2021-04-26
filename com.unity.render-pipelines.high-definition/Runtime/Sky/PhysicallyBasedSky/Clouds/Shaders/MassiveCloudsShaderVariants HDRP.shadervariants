@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MassiveCloudsShaderVariants HDRP
+  m_Shaders:
+  - first: {fileID: 4800000, guid: d8c2895e285dbc84b9d86640453619e0, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _SkyEnabled
+        passType: 0
+  - first: {fileID: 4800000, guid: f82409524fd3cb44cb236dfddc835a20, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: dd1a6bb7b63241ad903981b19f397872, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _ADAPTIVE_PASS
+        passType: 0
