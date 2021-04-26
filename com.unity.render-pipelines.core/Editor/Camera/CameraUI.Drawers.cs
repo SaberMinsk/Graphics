@@ -14,6 +14,7 @@ namespace UnityEditor.Rendering
             RenderLoop = 1 << 4,
             Rendering = 1 << 5,
             Environment = 1 << 6,
+            Stack = 1 << 7,
         }
 
         public enum ProjectionType

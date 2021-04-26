@@ -23,6 +23,16 @@ namespace UnityEditor.Rendering.Universal
             )
         );
 
+        public static readonly CED.IDrawer SectionStackSettings = CED.FoldoutGroup(
+            Styles.stackSettingsText,
+            CameraUI.Expandable.Stack,
+            k_ExpandedState,
+            FoldoutOption.Indent,
+            CED.Group(
+                Drawer_StackCameras
+            )
+        );
+
         public static readonly CED.IDrawer[] Inspector =
         {
             CED.Group(
@@ -31,7 +41,8 @@ namespace UnityEditor.Rendering.Universal
             SectionProjectionSettings,
             Rendering.Drawer,
             Environment.Drawer,
-            Output.Drawer
+            Output.Drawer,
+            SectionStackSettings
         };
 
         static void Drawer_CameraType(UniversalRenderPipelineSerializedCamera p, Editor owner)
@@ -58,6 +69,14 @@ namespace UnityEditor.Rendering.Universal
             if (EditorGUI.EndChangeCheck() || camType != originalCamType)
             {
                 p.cameraType.intValue = (int)camType;
+            }
+        }
+
+        static void Drawer_StackCameras(UniversalRenderPipelineSerializedCamera p, Editor owner)
+        {
+            if (owner is UniversalRenderPipelineCameraEditor cameraEditor)
+            {
+                cameraEditor.DrawStackSettings();
             }
         }
     }
