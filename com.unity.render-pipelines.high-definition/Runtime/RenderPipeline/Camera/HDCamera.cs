@@ -1471,8 +1471,16 @@ namespace UnityEngine.Rendering.HighDefinition
 
             // The variance between 0 and the actual halton sequence values reveals noticeable
             // instability in Unity's shadow maps, so we avoid index 0.
-            float jitterX = HaltonSequence.Get((taaFrameIndex & 1023) + 1, 2) - 0.5f;
-            float jitterY = HaltonSequence.Get((taaFrameIndex & 1023) + 1, 3) - 0.5f;
+            // Debug.Log(HaltonSequence.Get((taaFrameIndex & 1023) + 1, 2) - 0.5f);
+            //        0, -0.25, 0.25, -0.375, 0.125, -0.125, 0.375, -0.4375
+            // -0.5
+            //     -0.5, -0.75, -0.25, -0.875, -0.375, -0.625, -0.125, -0.9375
+            // *0.25
+            //   -0.125, -0.1875, -0.0625, -0.21875, -0.09375, -0.15625, -0.03125, -0.234375
+            // float jitterX = (HaltonSequence.Get((taaFrameIndex & 1023) + 1, 2) - 0.5f);
+            // float jitterY = (HaltonSequence.Get((taaFrameIndex & 1023) + 1, 3) - 0.5f);
+            float jitterX = (HaltonSequence.Get((taaFrameIndex & 1023) + 1, 2) - 0.5f) * 0.25f; // * 0.25f <- fix for CTAA to reduce jitter
+            float jitterY = (HaltonSequence.Get((taaFrameIndex & 1023) + 1, 3) - 0.5f) * 0.25f; // * 0.25f <- fix for CTAA to reduce jitter
             taaJitter = new Vector4(jitterX, jitterY, jitterX / actualWidth, jitterY / actualHeight);
 
             Matrix4x4 proj;

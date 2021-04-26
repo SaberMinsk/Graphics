@@ -9,7 +9,7 @@ namespace UnityEngine.Rendering.HighDefinition
     /// Class that holds data and logic for the pass to be executed
     /// </summary>
     [System.Serializable]
-    public abstract class CustomPass : IVersionable<DrawRenderersCustomPass.Version>
+    public abstract class CustomPass : IVersionable<CustomPass.Version>
     {
         /// <summary>
         /// Name of the custom pass
