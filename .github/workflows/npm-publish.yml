@@ -2,9 +2,9 @@ name: NPM Publish
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, saber-project-x ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, saber-project-x ]
   workflow_dispatch:
 
 jobs:
