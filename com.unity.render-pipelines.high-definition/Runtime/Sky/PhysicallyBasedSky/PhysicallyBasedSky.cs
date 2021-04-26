@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using UnityEngine.Serialization;
 
 namespace UnityEngine.Rendering.HighDefinition
 {
@@ -16,6 +17,11 @@ namespace UnityEngine.Rendering.HighDefinition
         Custom
     };
 
+    [Serializable, DebuggerDisplay(k_DebuggerDisplay)]
+    public sealed class CloudsConfigParameter: VolumeParameter<CloudsConfig>
+    {
+    }
+    
     /// <summary>
     /// Physically Based Sky model volume parameter.
     /// </summary>
@@ -170,6 +176,8 @@ namespace UnityEngine.Rendering.HighDefinition
         /// <summary> Horizon-zenith shift. Does not affect the precomputation. </summary>
         [Tooltip("Controls how HDRP blends between the Horizon Tint and Zenith Tint. Does not affect the precomputation.")]
         public ClampedFloatParameter horizonZenithShift = new ClampedFloatParameter(0, -1, 1);
+        
+        public CloudsConfigParameter cloudsConfig = new CloudsConfigParameter();
 
         static internal float ScaleHeightFromLayerDepth(float d)
         {
@@ -336,7 +344,7 @@ namespace UnityEngine.Rendering.HighDefinition
                 aerExt * aerosolTint.value.b);
         }
 
-        PhysicallyBasedSky()
+        public PhysicallyBasedSky()
         {
             displayName = "Physically Based Sky";
         }

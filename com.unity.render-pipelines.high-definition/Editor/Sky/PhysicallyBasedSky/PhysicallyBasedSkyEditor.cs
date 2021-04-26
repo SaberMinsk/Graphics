@@ -1,4 +1,4 @@
-using UnityEditor.Rendering;
+﻿using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -42,6 +42,8 @@ namespace UnityEditor.Rendering.HighDefinition
         SerializedDataParameter m_HorizonZenithShift;
 
         SerializedDataParameter m_NumberOfBounces;
+		
+        SerializedDataParameter m_CloudsConfig;
 
         GUIContent      m_ModelTypeLabel = new GUIContent("Type", "Specifies a preset to simplify the interface.");
 
@@ -92,6 +94,8 @@ namespace UnityEditor.Rendering.HighDefinition
             m_HorizonZenithShift       = Unpack(o.Find(x => x.horizonZenithShift));
 
             m_NumberOfBounces          = Unpack(o.Find(x => x.numberOfBounces));
+			
+			m_CloudsConfig          = Unpack(o.Find(x => x.cloudsConfig));
         }
 
         public override void OnInspectorGUI()
@@ -182,6 +186,10 @@ namespace UnityEditor.Rendering.HighDefinition
             PropertyField(m_HorizonZenithShift);
             PropertyField(m_ZenithTint);
 
+			EditorGUILayout.Space();
+			EditorGUILayout.LabelField("Clouds", EditorStyles.miniLabel);
+			PropertyField(m_CloudsConfig);
+			
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Miscellaneous", EditorStyles.miniLabel);
             PropertyField(m_NumberOfBounces);

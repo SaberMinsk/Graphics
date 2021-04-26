@@ -14,6 +14,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightDefinition.cs.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Sky/PhysicallyBasedSky/PhysicallyBasedSkyCommon.hlsl"
+    #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Sky/PhysicallyBasedSky/Clouds.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Sky/SkyUtils.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/AtmosphericScattering/AtmosphericScattering.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightLoop/CookieSampling.hlsl"
@@ -52,6 +53,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
     struct Varyings
     {
         float4 positionCS : SV_POSITION;
+        float2 texcoord   : TEXCOORD0;
         UNITY_VERTEX_OUTPUT_STEREO
     };
 
@@ -61,6 +63,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
         UNITY_SETUP_INSTANCE_ID(input);
         UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
         output.positionCS = GetFullScreenTriangleVertexPosition(input.vertexID, UNITY_RAW_FAR_CLIP_VALUE);
+        output.texcoord = GetFullScreenTriangleTexCoord(input.vertexID);
         return output;
     }
 
@@ -222,6 +225,8 @@ Shader "Hidden/HDRP/Sky/PbrSky"
         skyColor += radiance * (1 - skyOpacity);
         skyColor *= _IntensityMultiplier;
 
+        skyColor = EvaluateClouds(skyColor, input.texcoord);
+        
         return float4(skyColor, 1.0);
     }
 
