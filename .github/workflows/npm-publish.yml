@@ -1,0 +1,19 @@
+name: NPM Publish
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - working-directory: ./com.unity.render-pipelines.high-definition
+      run: npm publish --registry=${{ secrets.NPM_REGISTRY }} --_auth=${{ secrets.NPM_TOKEN }}
