@@ -5,7 +5,7 @@
 #define SHADOW_HIGH
 #define LIGHTLOOP_DISABLE_TILE_AND_CLUSTER
 
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Lighting/LightLoop/CookieSampling.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightLoop/CookieSampling.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/VolumeRendering.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Debug.hlsl"
@@ -16,15 +16,15 @@
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonLighting.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/EntityLighting.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Material/Builtin/BuiltinData.cs.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Material/Material.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Lighting/Shadow/HDShadowContext.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Lighting/LightLoop/HDShadow.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Sky/PhysicallyBasedSky/ShaderVariablesPhysicallyBasedSky.cs.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Sky/PhysicallyBasedSky/PhysicallyBasedSkyCommon.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Lighting/LightLoop/LightLoopDef.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Material/Lit/Lit.hlsl"
-#include "LocalPackages/com.unity.render-pipelines.high-definition@10.3.1/Runtime/Sky/SkyUtils.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Builtin/BuiltinData.cs.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/Shadow/HDShadowContext.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightLoop/HDShadow.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Sky/PhysicallyBasedSky/ShaderVariablesPhysicallyBasedSky.cs.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Sky/PhysicallyBasedSky/PhysicallyBasedSkyCommon.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightLoop/LightLoopDef.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Sky/SkyUtils.hlsl"
 
 float3 ComputeLight()
 {
