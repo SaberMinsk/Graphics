@@ -140,7 +140,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
                                 color *= SampleCookie2D(uv, light.surfaceTextureScaleOffset);
                                 // color *= SAMPLE_TEXTURE2D_ARRAY(_CookieTextures, s_linear_clamp_sampler, uv, light.surfaceTextureIndex).rgb;
                             }
-                            
+
                             color *= light.surfaceTint;
                         }
                         else // Flare region.
@@ -222,11 +222,12 @@ Shader "Hidden/HDRP/Sky/PbrSky"
             EvaluatePbrAtmosphere(_WorldSpaceCameraPos1, V, distAlongRay, renderSunDisk, skyColor, skyOpacity);
         }
 
-        skyColor += radiance * (1 - skyOpacity);
+        radiance *= 1 - skyOpacity;
+
+        skyColor = EvaluateClouds(skyColor, input.texcoord, radiance);
+
         skyColor *= _IntensityMultiplier;
 
-        skyColor = EvaluateClouds(skyColor, input.texcoord);
-        
         return float4(skyColor, 1.0);
     }
 
