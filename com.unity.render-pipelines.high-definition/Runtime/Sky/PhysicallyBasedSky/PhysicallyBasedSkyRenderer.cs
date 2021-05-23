@@ -304,6 +304,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
         static GraphicsFormat s_ColorFormat = GraphicsFormat.R16G16B16A16_SFloat;
 
+        private Material CloudsMaterial { get; set; }
+        private static int CloudsTextureID { get; } = Shader.PropertyToID("_CloudsTexture");
 
         public PhysicallyBasedSkyRenderer()
         {
@@ -323,6 +325,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
             Debug.Assert(s_GroundIrradiancePrecomputationCS    != null);
             Debug.Assert(s_InScatteredRadiancePrecomputationCS != null);
+
+            CloudsMaterial = CoreUtils.CreateEngineMaterial("Clouds");
         }
 
         public override void SetGlobalSkyData(CommandBuffer cmd, BuiltinSkyParameters builtinParams)
@@ -341,6 +345,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 m_PrecomputedData = null;
             }
             CoreUtils.Destroy(m_PbrSkyMaterial);
+
+            CoreUtils.Destroy(CloudsMaterial);
         }
 
         static float CornetteShanksPhasePartConstant(float anisotropy)
@@ -505,13 +511,53 @@ namespace UnityEngine.Rendering.HighDefinition
 
             int pass = (renderForCubemap ? 0 : 2);
 
-            CloudsConfig cloudsConfig = pbrSky.cloudsConfig.value;
-            if (cloudsConfig != null)
-            {
-                cloudsConfig.ApplyTo(m_PbrSkyMaterial);
-            }
+            RenderClouds();
 
             CoreUtils.DrawFullScreen(builtinParams.commandBuffer, m_PbrSkyMaterial, s_PbrSkyMaterialProperties, pass);
+
+            void RenderClouds()
+            {
+                CloudsConfig cloudsConfig = pbrSky.cloudsConfig.value;
+                if (cloudsConfig == null)
+                {
+                    return;
+                }
+
+                cloudsConfig.ApplyTo(CloudsMaterial);
+
+                int width = (int)(builtinParams.hdCamera.actualWidth * cloudsConfig.Sampler.Resolution);
+                int height = (int)(builtinParams.hdCamera.actualHeight * cloudsConfig.Sampler.Resolution);
+
+                cmd.GetTemporaryRT(
+                    CloudsTextureID,
+                    width,
+                    height,
+                    0,
+                    FilterMode.Trilinear,
+                    GraphicsFormat.R16_SFloat);
+
+                CoreUtils.SetRenderTarget(cmd, CloudsTextureID);
+
+                CoreUtils.DrawFullScreen(cmd, CloudsMaterial);
+
+                cmd.SetGlobalTexture(CloudsTextureID, CloudsTextureID);
+
+                cmd.ReleaseTemporaryRT(CloudsTextureID);
+
+                RestorePreviousTarget();
+
+                void RestorePreviousTarget()
+                {
+                    if (builtinParams.depthBuffer == BuiltinSkyParameters.nullRT || builtinParams.depthBuffer == null)
+                    {
+                        CoreUtils.SetRenderTarget(cmd, builtinParams.colorBuffer);
+                    }
+                    else
+                    {
+                        CoreUtils.SetRenderTarget(cmd, builtinParams.colorBuffer, builtinParams.depthBuffer);
+                    }
+                }
+            }
         }
     }
 }

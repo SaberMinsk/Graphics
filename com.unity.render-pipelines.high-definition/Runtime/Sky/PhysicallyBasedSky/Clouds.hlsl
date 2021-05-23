@@ -1,8 +1,7 @@
 ﻿#include "Clouds/Shaders/Includes/CloudsLighting.hlsl"
 #include "Clouds/Shaders/Includes/Clouds.hlsl"
 
-sampler2D _CloudsTextureMain;
-sampler2D _CloudsTextureAdditional;
+sampler2D _CloudsTexture;
 
 float3 EvaluateClouds(const float3 inputColor, const CloudFactor cloudFactor, const float3 radiance)
 {
@@ -20,7 +19,7 @@ float3 EvaluateClouds(const float3 inputColor, const CloudFactor cloudFactor, co
 
 float3 EvaluateClouds(const float3 inputColor, const float2 uv, float3 radiance)
 {
-    const CloudFactor mainCloud = UnpackCloud(tex2D(_CloudsTextureMain, uv));
+    const CloudFactor mainCloud = UnpackCloud(tex2D(_CloudsTexture, uv));
 
     const float3 mainCloudColor = EvaluateClouds(inputColor, mainCloud, radiance);
 
