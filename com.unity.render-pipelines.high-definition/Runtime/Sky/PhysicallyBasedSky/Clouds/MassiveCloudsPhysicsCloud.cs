@@ -4,23 +4,23 @@ namespace UnityEngine.Rendering.HighDefinition
 {
     public class MassiveCloudsPhysicsCloud: ScriptableObject
     {
-        private static int CloudsTextureMainPropertyID { get; } = Shader.PropertyToID("_CloudsTextureMain");
+        private static int CloudsTextureMainPropertyID { get; } = Shader.PropertyToID("_CloudsTexture");
         private static int CloudsTextureAdditionalPropertyID { get; } = Shader.PropertyToID("_CloudsTextureAdditional");
-        
+
         public const RenderTextureFormat BufferTextureFormat = RenderTextureFormat.ARGBFloat;
 
-        [field: SerializeField] 
+        [field: SerializeField]
         public MassiveCloudsPhysicsCloudPass PhysicsCloudPass { get; private set; }
-        
-        [field: SerializeField] 
+
+        [field: SerializeField]
         public MassiveCloudsPhysicsCloudPass LayeredCloudPass { get; private set; }
-        
+
         public void Setup()
         {
             PhysicsCloudPass.Setup();
             LayeredCloudPass.Setup();
         }
-        
+
         public void BuildCommandBuffer(CommandBuffer commandBuffer, Camera targetCamera, Action action)
         {
             PhysicsCloudPass.Update(this);

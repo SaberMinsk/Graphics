@@ -67,7 +67,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
         return output;
     }
 
-    float4 RenderSky(Varyings input)
+    void EvaluateSky(Varyings input, out float3 skyColor, out float3 radiance)
     {
         const float R = _PlanetaryRadius;
 
@@ -90,7 +90,6 @@ Shader "Hidden/HDRP/Sky/PbrSky"
         bool lookAboveHorizon        = (cosChi >= cosHor);
 
         float  tFrag    = FLT_INF;
-        float3 radiance = 0;
 
         if (renderSunDisk)
         {
@@ -214,7 +213,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
             }
         }
 
-        float3 skyColor = 0, skyOpacity = 0;
+        float3 skyOpacity = 0;
 
         if (rayIntersectsAtmosphere)
         {
@@ -224,11 +223,33 @@ Shader "Hidden/HDRP/Sky/PbrSky"
 
         radiance *= 1 - skyOpacity;
 
-        skyColor = EvaluateClouds(skyColor, input.texcoord, radiance);
-
         skyColor *= _IntensityMultiplier;
+    }
 
-        return float4(skyColor, 1.0);
+    float4 RenderSky(Varyings input)
+    {
+        float3 skyColor;
+        float3 radiance;
+
+        EvaluateSky(input, skyColor, radiance);
+
+        float4 finalColor = float4(skyColor + radiance, 1);
+
+        return finalColor;
+    }
+
+    float4 RenderSkyWithClouds(Varyings input)
+    {
+        float3 skyColor;
+        float3 radiance;
+
+        EvaluateSky(input, skyColor, radiance);
+
+        float3 skyWithClouds = EvaluateClouds(skyColor, input.texcoord, radiance);
+
+        float4 finalColor = float4(skyWithClouds, 1);
+
+        return finalColor;
     }
 
     float4 FragBaking(Varyings input) : SV_Target
@@ -239,7 +260,7 @@ Shader "Hidden/HDRP/Sky/PbrSky"
     float4 FragRender(Varyings input) : SV_Target
     {
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-        float4 value = RenderSky(input);
+        float4 value = RenderSkyWithClouds(input);
         value.rgb *= GetCurrentExposureMultiplier(); // Only the full-screen pass is pre-exposed
         return value;
     }

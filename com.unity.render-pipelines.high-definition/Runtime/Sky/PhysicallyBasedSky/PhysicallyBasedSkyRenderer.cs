@@ -511,7 +511,10 @@ namespace UnityEngine.Rendering.HighDefinition
 
             int pass = (renderForCubemap ? 0 : 2);
 
-            RenderClouds();
+            if (!renderForCubemap)
+            {
+                RenderClouds();
+            }
 
             CoreUtils.DrawFullScreen(builtinParams.commandBuffer, m_PbrSkyMaterial, s_PbrSkyMaterialProperties, pass);
 
@@ -533,8 +536,8 @@ namespace UnityEngine.Rendering.HighDefinition
                     width,
                     height,
                     0,
-                    FilterMode.Trilinear,
-                    GraphicsFormat.R16_SFloat);
+                    FilterMode.Point,
+                    GraphicsFormat.R16G16B16A16_SFloat);
 
                 CoreUtils.SetRenderTarget(cmd, CloudsTextureID);
 
