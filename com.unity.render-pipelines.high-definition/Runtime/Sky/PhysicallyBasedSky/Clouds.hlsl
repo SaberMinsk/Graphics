@@ -3,38 +3,15 @@
 
 sampler2D _CloudsTexture;
 
-float3 EvaluateClouds(const float3 inputColor, const CloudFactor cloudFactor, const float3 radiance)
+float3 EvaluateClouds(const float3 inputColor, const float2 uv, const float3 radiance)
 {
-    //HACK
-    float density = saturate(cloudFactor.density * 2);
+    const CloudFactor cloudFactor = UnpackCloud(tex2D(_CloudsTexture, uv));
 
-    float3 outputColor = lerp(inputColor + radiance, inputColor * cloudFactor.coloring, density);
+    float3 outputColor = lerp(inputColor + radiance, inputColor * cloudFactor.coloring, cloudFactor.density);
 
     const float3 lightColor = ComputeLight() * cloudFactor.scattering;
 
     outputColor += lightColor;
 
     return outputColor;
-}
-
-float3 EvaluateClouds(const float3 inputColor, const float2 uv, float3 radiance)
-{
-    const CloudFactor mainCloud = UnpackCloud(tex2D(_CloudsTexture, uv));
-
-    const float3 mainCloudColor = EvaluateClouds(inputColor, mainCloud, radiance);
-
-    return mainCloudColor;
-}
-
-float3 EvaluateClouds2(const float3 inputColor, const float2 uv, const float4 vertex, float3 radiance)
-{
-    v2f v;
-    v.uv = float4(uv, 0, 1);
-    v.vertex = vertex;
-
-    const CloudFactor mainCloud = UnpackCloud(CloudsFrag(v));
-
-    const float3 mainCloudColor = EvaluateClouds(inputColor, mainCloud, radiance);
-
-    return mainCloudColor;
 }
