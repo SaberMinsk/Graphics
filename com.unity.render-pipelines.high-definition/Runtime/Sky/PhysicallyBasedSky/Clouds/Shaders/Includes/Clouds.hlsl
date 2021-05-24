@@ -13,7 +13,7 @@ struct appdata
     float4 uv : TEXCOORD0;
     uint vertexID : SV_VertexID;
 };
-            
+
 struct v2f
 {
     float4 uv : TEXCOORD0;
@@ -42,7 +42,7 @@ float4 CloudsFrag(v2f i) : SV_Target
     }
 
     const CloudFactor cloudFactor = PhysicsCloud(ray, ss);
-            	
+
     return PackCloud(cloudFactor);
 }
 #endif

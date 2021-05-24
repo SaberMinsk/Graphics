@@ -13,7 +13,7 @@ struct ScreenSpace
     float3           rayDir;
     float            depth;
     float4           uv;
-}; 
+};
 
 
 float SampleCameraDepth(float4 uv)
@@ -40,11 +40,11 @@ ScreenSpace CreateScreenSpace(float4 uv)
     ScreenSpace ss;
     float       depth          = CalculateDepth(uv);
     float3      cameraPos      = _WorldSpaceCameraPos;
-    float3      world          = CalculateWorldPos(uv, depth);
+    float3      world          = CalculateWorldPos(uv, depth).xyz;
     float3      rayDir         = normalize(world.xyz - cameraPos);
     float       isMaxPlane     = smoothstep(0.9, 0.999, depth);
     float       maxDist        = length(world.xyz - cameraPos);
-    
+
     ss.cameraPos  = cameraPos;
     ss.worldPos   = world;
     ss.isMaxPlane = isMaxPlane;

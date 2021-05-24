@@ -32,12 +32,12 @@ float3 ComputeLight()
     const PositionInputs inputs = GetPositionInput(0, 0, 1, UNITY_MATRIX_I_VP, UNITY_MATRIX_V);
 
     float3 color;
-        
-    for (int i = 0; i < _DirectionalLightCount; ++i)
+
+    for (uint i = 0; i < _DirectionalLightCount; ++i)
     {
         const DirectionalLightData directionalLightData = _DirectionalLightDatas[i];
-            
-        color += EvaluateLight_Directional(context, inputs, directionalLightData);
+
+        color += EvaluateLight_Directional(context, inputs, directionalLightData).xyz;
     }
 
     return color;

@@ -69,6 +69,8 @@ Shader "Hidden/HDRP/Sky/PbrSky"
 
     void EvaluateSky(Varyings input, out float3 skyColor, out float3 radiance)
     {
+        skyColor = radiance = 0;
+
         const float R = _PlanetaryRadius;
 
         // TODO: Not sure it's possible to precompute cam rel pos since variables
