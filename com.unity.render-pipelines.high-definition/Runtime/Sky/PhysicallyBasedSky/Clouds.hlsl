@@ -7,7 +7,9 @@ float3 EvaluateClouds(const float3 inputColor, const float2 uv, const float3 rad
 {
     const CloudFactor cloudFactor = UnpackCloud(tex2D(_CloudsTexture, uv));
 
-    float3 outputColor = lerp(inputColor + radiance, inputColor * cloudFactor.coloring, cloudFactor.density);
+    const float density = saturate(cloudFactor.density * 2);
+
+    float3 outputColor = lerp(inputColor + radiance, inputColor * cloudFactor.coloring, density);
 
     const float3 lightColor = ComputeLight() * cloudFactor.scattering;
 
