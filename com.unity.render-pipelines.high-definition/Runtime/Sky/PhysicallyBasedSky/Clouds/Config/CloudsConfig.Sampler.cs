@@ -60,7 +60,8 @@ namespace UnityEngine.Rendering.HighDefinition
 					Warp = Mathf.Lerp(start.Warp, end.Warp, t),
 					Softness = Mathf.Lerp(start.Softness, end.Softness, t),
 					Density = Mathf.Lerp(start.Density, end.Density, t),
-					Scale = Mathf.Lerp(start.Scale, end.Scale, t)
+					Scale = Mathf.Lerp(start.Scale, end.Scale, t),
+					Resolution = Mathf.Lerp(start.Resolution, end.Resolution, t)
 				};
 			}
 
