@@ -1,0 +1,17 @@
+image: node:latest
+
+stages:
+  - deploy
+
+deploy:
+  tags:
+    - npm
+    - docker
+  only:
+    refs:
+      - master
+      - /^saber-project-x-.*$/
+  stage: deploy
+  script:
+    - cd com.unity.render-pipelines.high-definition
+    - npm publish --registry=$NPM_REGISTRY --_auth=$NPM_TOKEN
