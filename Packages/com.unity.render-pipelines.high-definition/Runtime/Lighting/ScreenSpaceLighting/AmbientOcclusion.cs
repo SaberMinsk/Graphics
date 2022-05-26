@@ -28,7 +28,7 @@ namespace UnityEngine.Rendering.HighDefinition
         /// <summary>
         /// Sampling radius. Bigger the radius, wider AO will be achieved, risking to lose fine details and increasing cost of the effect due to increasing cache misses.
         /// </summary>
-        public ClampedFloatParameter radius = new ClampedFloatParameter(2.0f, 0.25f, 5.0f);
+        public ClampedFloatParameter radius = new ClampedFloatParameter(2.0f, 0.25f, 100.0f);
 
         /// <summary>
         /// Moving this factor closer to 0 will increase the amount of accepted samples during temporal accumulation, increasing the ghosting, but reducing the temporal noise.
