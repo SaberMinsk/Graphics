@@ -791,6 +791,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public static readonly int _InputTexture = Shader.PropertyToID("_InputTexture");
         public static readonly int _InputTextureMSAA = Shader.PropertyToID("_InputTextureMSAA");
         public static readonly int _OutputTexture = Shader.PropertyToID("_OutputTexture");
+        public static readonly int _OutputExposure = Shader.PropertyToID("_OutputExposure");
         public static readonly int _SourceTexture = Shader.PropertyToID("_SourceTexture");
         public static readonly int _InputHistoryTexture = Shader.PropertyToID("_InputHistoryTexture");
         public static readonly int _OutputHistoryTexture = Shader.PropertyToID("_OutputHistoryTexture");

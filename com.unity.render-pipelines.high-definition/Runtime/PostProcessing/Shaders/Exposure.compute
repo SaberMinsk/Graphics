@@ -2,6 +2,7 @@
 
 #pragma only_renderers d3d11 playstation xboxone xboxseries vulkan metal switch
 
+#pragma kernel KDecodeExposure
 #pragma kernel KFixedExposure
 #pragma kernel KManualCameraExposure
 #pragma kernel KPrePass
@@ -9,10 +10,21 @@
 #pragma kernel KReset
 
 TEXTURE2D(_InputTexture);
+RWBuffer<float> _OutputExposure;
 
 #define PREPASS_TEX_SIZE 1024.0
 #define PREPASS_TEX_HALF_SIZE 512.0
 //#pragma enable_d3d11_debug_symbols
+
+//
+// Decode exposure from texture
+//
+[numthreads(1,1,1)]
+void KDecodeExposure(uint2 dispatchThreadId : SV_DispatchThreadID)
+{
+    _OutputExposure[0] = _InputTexture[dispatchThreadId].x;
+    _OutputExposure[1] = _InputTexture[dispatchThreadId].y;
+}
 
 //
 // Fixed exposure

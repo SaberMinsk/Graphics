@@ -261,6 +261,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
                 TextureHandle postProcessDest = RenderPostProcess(m_RenderGraph, prepassOutput, colorBuffer, backBuffer, cullingResults, hdCamera);
 
+                UpdateCameraLastExposure(m_RenderGraph, hdCamera);
+
                 GenerateDebugImageHistogram(m_RenderGraph, hdCamera, postProcessDest);
                 PushFullScreenExposureDebugTexture(m_RenderGraph, postProcessDest, fullScreenDebugFormat);
 
