@@ -1358,6 +1358,44 @@ namespace UnityEngine.Rendering.HighDefinition
             return source;
         }
 
+        class UpdateLastExposureData
+        {
+            public ComputeShader applyExposureCS;
+
+            public int decodeExposureKernel;
+            public ComputeBufferHandle exposureBuffer;
+            public TextureHandle exposureToDecode;
+
+            public HDCamera hdCamera;
+        }
+
+        void UpdateCameraLastExposure(RenderGraph renderGraph, HDCamera hdCamera)
+        {
+            using (var builder = renderGraph.AddRenderPass<UpdateLastExposureData>("Update Last Exposure", out var passData, ProfilingSampler.Get(HDProfileId.UpdateLastExposure)))
+            {
+                passData.applyExposureCS = defaultResources.shaders.exposureCS;
+                passData.decodeExposureKernel = defaultResources.shaders.exposureCS.FindKernel("KDecodeExposure");
+                passData.exposureBuffer = builder.CreateTransientComputeBuffer(new ComputeBufferDesc(2, sizeof(float)));
+                passData.exposureToDecode = builder.ReadTexture(renderGraph.ImportTexture(GetExposureTexture(hdCamera)));
+                passData.hdCamera = hdCamera;
+
+                builder.SetRenderFunc((UpdateLastExposureData data, RenderGraphContext ctx) =>
+                {
+                    ComputeBuffer buffer = data.exposureBuffer;
+
+                    var cs = data.applyExposureCS;
+                    ctx.cmd.SetComputeTextureParam(cs, data.decodeExposureKernel, HDShaderIDs._InputTexture, data.exposureToDecode);
+                    ctx.cmd.SetComputeBufferParam(cs, data.decodeExposureKernel, HDShaderIDs._OutputExposure, buffer);
+                    ctx.cmd.DispatchCompute(cs, data.decodeExposureKernel, 1, 1, 1);
+
+                    var exposureArray = new float[2];
+                    buffer.GetData(exposureArray);
+
+                    data.hdCamera.lastExposure = exposureArray[1];
+                });
+            }
+        }
+
         #endregion
 
         #region Custom Post Process

@@ -201,6 +201,7 @@ namespace UnityEngine.Rendering.HighDefinition
         FixedExposure,
         DynamicExposure,
         ApplyExposure,
+        UpdateLastExposure,
         TemporalAntialiasing,
         DeepLearningSuperSamplingColorMask,
         DeepLearningSuperSampling,
