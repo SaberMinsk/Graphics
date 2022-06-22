@@ -113,6 +113,9 @@ namespace UnityEngine.Rendering.HighDefinition
         /// <summary>Current time for this camera.</summary>
         public float time; // Take the 'animateMaterials' setting into account.
 
+        /// <summary>Last calculated exposure from post-processing.</summary>
+        public float lastExposure { get; internal set; }
+
         internal bool dofHistoryIsValid = false;  // used to invalidate DoF accumulation history when switching DoF modes
 
         // State needed to handle TAAU.
