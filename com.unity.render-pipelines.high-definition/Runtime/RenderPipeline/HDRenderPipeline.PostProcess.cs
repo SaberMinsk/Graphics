@@ -39,6 +39,7 @@ namespace UnityEngine.Rendering.HighDefinition
         Texture2D m_ExposureCurveTexture;
         RTHandle m_EmptyExposureTexture; // RGHalf
         RTHandle m_DebugExposureData;
+        ComputeBuffer m_ExposureDecodeBuffer;
         ComputeBuffer m_HistogramBuffer;
         ComputeBuffer m_DebugImageHistogramBuffer;
         readonly int[] m_EmptyHistogram = new int[k_HistogramBins];
@@ -236,6 +237,8 @@ namespace UnityEngine.Rendering.HighDefinition
             m_DebugExposureData = RTHandles.Alloc(1, 1, colorFormat: k_ExposureFormat,
                 enableRandomWrite: true, name: "Debug Exposure Info");
 
+            m_ExposureDecodeBuffer = new ComputeBuffer(2, sizeof(float));
+
             m_ExposureCurveTexture = new Texture2D(k_ExposureCurvePrecision, 1, GraphicsFormat.R16G16B16A16_SFloat, TextureCreationFlags.None)
             {
                 name = "Exposure Curve",
@@ -287,6 +290,7 @@ namespace UnityEngine.Rendering.HighDefinition
             CoreUtils.SafeRelease(m_HistogramBuffer);
             CoreUtils.SafeRelease(m_DebugImageHistogramBuffer);
             RTHandles.Release(m_DebugExposureData);
+            CoreUtils.SafeRelease(m_ExposureDecodeBuffer);
 
             m_ExposureCurveTexture = null;
             m_InternalSpectralLut = null;
@@ -298,6 +302,7 @@ namespace UnityEngine.Rendering.HighDefinition
             m_DebugImageHistogramBuffer = null;
             m_DebugExposureData = null;
             m_DLSSPass = null;
+            m_ExposureDecodeBuffer = null;
         }
 
         // In some cases, the internal buffer of render textures might be invalid.
@@ -1347,12 +1352,10 @@ namespace UnityEngine.Rendering.HighDefinition
 
         class UpdateLastExposureData
         {
-            public ComputeShader applyExposureCS;
-
+            public ComputeShader exposureCS;
             public int decodeExposureKernel;
             public ComputeBufferHandle exposureBuffer;
             public TextureHandle exposureToDecode;
-
             public HDCamera hdCamera;
         }
 
@@ -1360,25 +1363,24 @@ namespace UnityEngine.Rendering.HighDefinition
         {
             using (var builder = renderGraph.AddRenderPass<UpdateLastExposureData>("Update Last Exposure", out var passData, ProfilingSampler.Get(HDProfileId.UpdateLastExposure)))
             {
-                passData.applyExposureCS = defaultResources.shaders.exposureCS;
+                passData.exposureCS = defaultResources.shaders.exposureCS;
                 passData.decodeExposureKernel = defaultResources.shaders.exposureCS.FindKernel("KDecodeExposure");
-                passData.exposureBuffer = builder.CreateTransientComputeBuffer(new ComputeBufferDesc(2, sizeof(float)));
                 passData.exposureToDecode = builder.ReadTexture(renderGraph.ImportTexture(GetExposureTexture(hdCamera)));
+                passData.exposureBuffer = builder.ReadComputeBuffer(builder.WriteComputeBuffer(renderGraph.ImportComputeBuffer(m_ExposureDecodeBuffer)));
                 passData.hdCamera = hdCamera;
 
                 builder.SetRenderFunc((UpdateLastExposureData data, RenderGraphContext ctx) =>
                 {
-                    ComputeBuffer buffer = data.exposureBuffer;
+                    var cs = data.exposureCS;
+                    var buffer = data.exposureBuffer;
 
-                    var cs = data.applyExposureCS;
+                    // Decode exposure
                     ctx.cmd.SetComputeTextureParam(cs, data.decodeExposureKernel, HDShaderIDs._InputTexture, data.exposureToDecode);
                     ctx.cmd.SetComputeBufferParam(cs, data.decodeExposureKernel, HDShaderIDs._OutputExposure, buffer);
                     ctx.cmd.DispatchCompute(cs, data.decodeExposureKernel, 1, 1, 1);
 
-                    var exposureArray = new float[2];
-                    buffer.GetData(exposureArray);
-
-                    data.hdCamera.lastExposure = exposureArray[1];
+                    // Fetch result
+                    ctx.cmd.RequestAsyncReadback(buffer, request => data.hdCamera.lastExposure = request.GetData<float>()[1]);
                 });
             }
         }
