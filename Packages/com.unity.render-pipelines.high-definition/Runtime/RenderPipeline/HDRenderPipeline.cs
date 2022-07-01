@@ -2655,7 +2655,7 @@ namespace UnityEngine.Rendering.HighDefinition
         {
             // IMPORTANT NOTE: This is not checking for Transparent Motion Vectors because we need to explicitly write camera motion vectors
             // for transparent objects too, otherwise the transparent objects will look completely broken upon motion if Transparent Motion Vectors is off.
-            return frameSettings.IsEnabled(FrameSettingsField.MotionVectors);
+            return frameSettings.IsEnabled(FrameSettingsField.MotionVectors) && frameSettings.IsEnabled(FrameSettingsField.TransparentsWriteMotionVector);
         }
 
         /// <summary>
