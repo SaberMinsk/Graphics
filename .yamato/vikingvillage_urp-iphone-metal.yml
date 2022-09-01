@@ -11,23 +11,23 @@ VikingVillage_URP_iPhone_Metal_performance_playmode_runtime_il2cpp_Linear_trunk:
     name: VikingVillage_URP on iPhone_Metal_performance_playmode_runtime_il2cpp_Linear on version trunk
     agent:
         type: Unity::mobile::iPhone
-        image: mobile/macos-10.15-testing:stable
+        image: mobile/macos-10.15-testing:v0.0.7-909915
         flavor: b1.medium
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: '{{trunk.changeset.id}}'
+        TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
         VV_URP_BRANCH: master
         VV_URP_REVISION: eebe6db7d9b186603b63095a926d76ded2bf1110
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
-        TEST_FILTER: .*
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
       -  command: chmod +x ./utr
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --performance-project-id=VikingVillage_URP --platform=iOS --player-load-path=playersMedium --report-performance-data --suite=playmode --timeout=2400 --zero-tests-are-ok=1
+                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --performance-project-id=VikingVillage_URP --platform=iOS --player-load-path=playersMedium --report-performance-data --suite=playmode --timeout=2400
     after:
       -  command: pip3 install requests ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -45,16 +45,16 @@ Build_VikingVillage_URP_iPhone_Metal_performance_playmode_runtime_il2cpp_Linear_
     name: Build VikingVillage_URP on iPhone_Metal_il2cpp_Linear_performance_playmode_runtime_build_Player on version trunk
     agent:
         type: Unity::VM::osx
-        image: mobile/macos-10.15-testing:stable
+        image: mobile/macos-10.15-testing:v0.0.7-909915
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: '{{trunk.changeset.id}}'
+        TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
         VV_URP_BRANCH: master
         VV_URP_REVISION: eebe6db7d9b186603b63095a926d76ded2bf1110
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
-        TEST_FILTER: .*
     commands:
       -  command: git clone https://github.cds.internal.unity3d.com/andrew-theisen/Viking-Village-Perf.git -b $VV_URP_BRANCH TestProjects/Viking-Village-Perf
          retries: 3
@@ -106,16 +106,16 @@ VikingVillage_URP_iPhone_Metal_performance_build_editmode_il2cpp_Linear_trunk:
     name: VikingVillage_URP on iPhone_Metal_performance_build_editmode_il2cpp_Linear on version trunk
     agent:
         type: Unity::VM::osx
-        image: mobile/macos-10.15-testing:stable
+        image: mobile/macos-10.15-testing:v0.0.7-909915
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: '{{trunk.changeset.id}}'
+        TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
         VV_URP_BRANCH: master
         VV_URP_REVISION: eebe6db7d9b186603b63095a926d76ded2bf1110
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
-        TEST_FILTER: .*
     commands:
       -  command: git clone https://github.cds.internal.unity3d.com/andrew-theisen/Viking-Village-Perf.git -b $VV_URP_BRANCH TestProjects/Viking-Village-Perf
          retries: 3
@@ -150,7 +150,7 @@ VikingVillage_URP_iPhone_Metal_performance_build_editmode_il2cpp_Linear_trunk:
          retries: 2
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --category=URP --editor-location=.Editor --extra-editor-arg="-addscenetobuild=Assets/Scenes/The_Viking_Village.unity" --extra-editor-arg="-buildtarget" --extra-editor-arg="iOS" --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-executemethod" --extra-editor-arg="Editor.Setup" --extra-editor-arg="-packageundertestbranch=$GIT_BRANCH" --extra-editor-arg="-packageundertestname=com.unity.render-pipelines.universal" --extra-editor-arg="-packageundertestrev=$GIT_REVISION" --extra-editor-arg="-packageundertestrevdate=$GIT_REVISIONDATE" --extra-editor-arg="-playergraphicsapi=Metal" --extra-editor-arg="-scriptingbackend=IL2CPP" --performance-project-id=VikingVillage_URP --platform=iOS --report-performance-data --scripting-backend=IL2CPP --suite=editor --testfilter=Medium --testproject=./TestProjects/Viking-Village-Perf --zero-tests-are-ok=1
+                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --category=URP --editor-location=.Editor --extra-editor-arg="-addscenetobuild=Assets/Scenes/The_Viking_Village.unity" --extra-editor-arg="-buildtarget" --extra-editor-arg="iOS" --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-executemethod" --extra-editor-arg="Editor.Setup" --extra-editor-arg="-packageundertestbranch=$GIT_BRANCH" --extra-editor-arg="-packageundertestname=com.unity.render-pipelines.universal" --extra-editor-arg="-packageundertestrev=$GIT_REVISION" --extra-editor-arg="-packageundertestrevdate=$GIT_REVISIONDATE" --extra-editor-arg="-playergraphicsapi=Metal" --extra-editor-arg="-scriptingbackend=IL2CPP" --performance-project-id=VikingVillage_URP --platform=iOS --report-performance-data --scripting-backend=IL2CPP --suite=editor --testfilter=Medium --testproject=./TestProjects/Viking-Village-Perf
     after:
       -  command: pip3 install requests ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -166,23 +166,23 @@ VikingVillage_URP_iPhone_Metal_performance_playmode_runtime_il2cpp_Linear_CUSTOM
     name: VikingVillage_URP on iPhone_Metal_performance_playmode_runtime_il2cpp_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::mobile::iPhone
-        image: mobile/macos-10.15-testing:stable
+        image: mobile/macos-10.15-testing:v0.0.7-909915
         flavor: b1.medium
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: custom_revision_not_set
+        TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
         VV_URP_BRANCH: master
         VV_URP_REVISION: eebe6db7d9b186603b63095a926d76ded2bf1110
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
-        TEST_FILTER: .*
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
       -  command: chmod +x ./utr
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --performance-project-id=VikingVillage_URP --platform=iOS --player-load-path=playersMedium --report-performance-data --suite=playmode --timeout=2400 --zero-tests-are-ok=1
+                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --performance-project-id=VikingVillage_URP --platform=iOS --player-load-path=playersMedium --report-performance-data --suite=playmode --timeout=2400
     after:
       -  command: pip3 install requests ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -200,16 +200,16 @@ Build_VikingVillage_URP_iPhone_Metal_performance_playmode_runtime_il2cpp_Linear_
     name: Build VikingVillage_URP on iPhone_Metal_il2cpp_Linear_performance_playmode_runtime_build_Player on version CUSTOM-REVISION
     agent:
         type: Unity::VM::osx
-        image: mobile/macos-10.15-testing:stable
+        image: mobile/macos-10.15-testing:v0.0.7-909915
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: custom_revision_not_set
+        TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
         VV_URP_BRANCH: master
         VV_URP_REVISION: eebe6db7d9b186603b63095a926d76ded2bf1110
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
-        TEST_FILTER: .*
     commands:
       -  command: git clone https://github.cds.internal.unity3d.com/andrew-theisen/Viking-Village-Perf.git -b $VV_URP_BRANCH TestProjects/Viking-Village-Perf
          retries: 3
@@ -261,16 +261,16 @@ VikingVillage_URP_iPhone_Metal_performance_build_editmode_il2cpp_Linear_CUSTOM-R
     name: VikingVillage_URP on iPhone_Metal_performance_build_editmode_il2cpp_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::VM::osx
-        image: mobile/macos-10.15-testing:stable
+        image: mobile/macos-10.15-testing:v0.0.7-909915
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: custom_revision_not_set
+        TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
         VV_URP_BRANCH: master
         VV_URP_REVISION: eebe6db7d9b186603b63095a926d76ded2bf1110
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
-        TEST_FILTER: .*
     commands:
       -  command: git clone https://github.cds.internal.unity3d.com/andrew-theisen/Viking-Village-Perf.git -b $VV_URP_BRANCH TestProjects/Viking-Village-Perf
          retries: 3
@@ -305,7 +305,7 @@ VikingVillage_URP_iPhone_Metal_performance_build_editmode_il2cpp_Linear_CUSTOM-R
          retries: 2
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --category=URP --editor-location=.Editor --extra-editor-arg="-addscenetobuild=Assets/Scenes/The_Viking_Village.unity" --extra-editor-arg="-buildtarget" --extra-editor-arg="iOS" --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-executemethod" --extra-editor-arg="Editor.Setup" --extra-editor-arg="-packageundertestbranch=$GIT_BRANCH" --extra-editor-arg="-packageundertestname=com.unity.render-pipelines.universal" --extra-editor-arg="-packageundertestrev=$GIT_REVISION" --extra-editor-arg="-packageundertestrevdate=$GIT_REVISIONDATE" --extra-editor-arg="-playergraphicsapi=Metal" --extra-editor-arg="-scriptingbackend=IL2CPP" --performance-project-id=VikingVillage_URP --platform=iOS --report-performance-data --scripting-backend=IL2CPP --suite=editor --testfilter=Medium --testproject=./TestProjects/Viking-Village-Perf --zero-tests-are-ok=1
+                ./utr --artifacts_path=TestProjects/Viking-Village-Perf/test-results --category=URP --editor-location=.Editor --extra-editor-arg="-addscenetobuild=Assets/Scenes/The_Viking_Village.unity" --extra-editor-arg="-buildtarget" --extra-editor-arg="iOS" --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-executemethod" --extra-editor-arg="Editor.Setup" --extra-editor-arg="-packageundertestbranch=$GIT_BRANCH" --extra-editor-arg="-packageundertestname=com.unity.render-pipelines.universal" --extra-editor-arg="-packageundertestrev=$GIT_REVISION" --extra-editor-arg="-packageundertestrevdate=$GIT_REVISIONDATE" --extra-editor-arg="-playergraphicsapi=Metal" --extra-editor-arg="-scriptingbackend=IL2CPP" --performance-project-id=VikingVillage_URP --platform=iOS --report-performance-data --scripting-backend=IL2CPP --suite=editor --testfilter=Medium --testproject=./TestProjects/Viking-Village-Perf
     after:
       -  command: pip3 install requests ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0

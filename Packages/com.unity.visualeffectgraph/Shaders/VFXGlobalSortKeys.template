@@ -1,0 +1,65 @@
+#pragma kernel CSMain
+#pragma only_renderers d3d11 playstation xboxone xboxseries vulkan metal switch glcore gles3
+${VFXPragmaRequire}
+
+${VFXGlobalInclude}
+${VFXGlobalDeclaration}
+${VFXInclude("Shaders/VFXParticleCommon.template")}
+
+CBUFFER_START(sortParamsConst)
+    uint dispatchWidth;
+    ${VFXInstancingConstants}
+CBUFFER_END
+
+ByteAddressBuffer attributeBuffer;
+StructuredBuffer<uint> inputBuffer;
+
+struct Kvp
+{
+	float sortKey;
+	uint index;
+};
+
+RWStructuredBuffer<Kvp> outputBuffer;
+
+${VFXPerPassInclude}
+
+[numthreads(NB_THREADS_PER_GROUP,1,1)]
+void CSMain(uint3 groupId          : SV_GroupID,
+            uint3 groupThreadId    : SV_GroupThreadID)
+{
+	uint id = GetThreadId(groupId, groupThreadId, dispatchWidth);
+	uint index = id;
+    ${VFXInitInstancing}
+
+
+
+	ContextData contextData = instancingContextData[instanceActiveIndex];
+	uint threshold = inputBuffer[instanceActiveIndex];
+
+    if(index == 0)
+        outputBuffer[instanceActiveIndex].index = threshold; //Store the count here
+
+	if (index < threshold)
+	{
+#if HAVE_VFX_MODIFICATION
+        ${VFXLoadGraphValues}
+
+        ${VFXLoadParameter:{localToWorld}}
+        vfxLocalToWorld = localToWorld;
+
+        ${VFXLoadParameter:{worldToLocal}}
+        vfxWorldToLocal = worldToLocal;
+#endif
+
+        uint indirectId = index + instancingBatchSize + instanceActiveIndex * RAW_CAPACITY;
+		uint index = inputBuffer[indirectId];
+
+		VFXAttributes attributes = (VFXAttributes)0;
+        ${VFXLoadAttributes}
+
+        ${VFXFeedSortingKeys}
+
+        outputBuffer[indirectId] = output;
+	}
+}

@@ -11,15 +11,15 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_memory_il2cpp_Linear_trunk:
     name: HDRP_PerformanceTests on Linux_Vulkan_performance_memory_il2cpp_Linear on version trunk
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: '{{trunk.changeset.id}}'
         GIT_BRANCH: master
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -33,7 +33,7 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_memory_il2cpp_Linear_trunk:
       -  command: sudo unity-downloader-cli --source-file unity_revision.txt -c editor -c il2cpp  --wait --published-only
          retries: 2
       -  command: git checkout %GIT_BRANCH%
-      -  command: DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=StandaloneWindows64 --scripting-backend=IL2CPP --suite=playmode --testfilter=Memory --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200 --zero-tests-are-ok=1
+      -  command: DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=StandaloneWindows64 --scripting-backend=IL2CPP --suite=playmode --testfilter=Memory --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -50,15 +50,15 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_counters_il2cpp_Linear_trunk:
     name: HDRP_PerformanceTests on Linux_Vulkan_performance_counters_il2cpp_Linear on version trunk
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: '{{trunk.changeset.id}}'
         GIT_BRANCH: master
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -72,7 +72,7 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_counters_il2cpp_Linear_trunk:
       -  command: sudo unity-downloader-cli --source-file unity_revision.txt -c editor -c il2cpp  --wait --published-only
          retries: 2
       -  command: git checkout $GIT_BRANCH
-      -  command: DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --scripting-backend=IL2CPP --suite=playmode --testfilter=Counters --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200 --zero-tests-are-ok=1
+      -  command: DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=StandaloneLinux64 --scripting-backend=IL2CPP --suite=playmode --testfilter=Counters --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -89,15 +89,15 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_run_build_il2cpp_Linear_trunk:
     name: HDRP_PerformanceTests on Linux_Vulkan_performance_run_build_il2cpp_Linear on version trunk
     agent:
         type: Unity::VM
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         flavor: b1.xlarge
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: '{{trunk.changeset.id}}'
         GIT_BRANCH: master
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -111,7 +111,7 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_run_build_il2cpp_Linear_trunk:
       -  command: sudo unity-downloader-cli --source-file unity_revision.txt -c editor -c il2cpp  --wait --published-only
          retries: 2
       -  command: git checkout %GIT_BRANCH%
-      -  command: DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --extra-editor-arg="-playergraphicsapi=Vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=editmode --scripting-backend=IL2CPP --suite=editor --testfilter=Build --testproject=./TestProjects/HDRP_PerformanceTests --timeout=14400 --zero-tests-are-ok=1
+      -  command: DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --extra-editor-arg="-playergraphicsapi=Vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=editmode --scripting-backend=IL2CPP --suite=editor --testfilter=Build --testproject=./TestProjects/HDRP_PerformanceTests --timeout=14400
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -128,15 +128,15 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_memory_il2cpp_Linear_CUSTOM-REVIS
     name: HDRP_PerformanceTests on Linux_Vulkan_performance_memory_il2cpp_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: custom_revision_not_set
         GIT_BRANCH: master
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -150,7 +150,7 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_memory_il2cpp_Linear_CUSTOM-REVIS
       -  command: sudo unity-downloader-cli --source-file unity_revision.txt -c editor -c il2cpp  --wait --published-only
          retries: 2
       -  command: git checkout %GIT_BRANCH%
-      -  command: DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=StandaloneWindows64 --scripting-backend=IL2CPP --suite=playmode --testfilter=Memory --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200 --zero-tests-are-ok=1
+      -  command: DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=StandaloneWindows64 --scripting-backend=IL2CPP --suite=playmode --testfilter=Memory --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -167,15 +167,15 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_counters_il2cpp_Linear_CUSTOM-REV
     name: HDRP_PerformanceTests on Linux_Vulkan_performance_counters_il2cpp_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: custom_revision_not_set
         GIT_BRANCH: master
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -189,7 +189,7 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_counters_il2cpp_Linear_CUSTOM-REV
       -  command: sudo unity-downloader-cli --source-file unity_revision.txt -c editor -c il2cpp  --wait --published-only
          retries: 2
       -  command: git checkout $GIT_BRANCH
-      -  command: DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --scripting-backend=IL2CPP --suite=playmode --testfilter=Counters --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200 --zero-tests-are-ok=1
+      -  command: DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=StandaloneLinux64 --scripting-backend=IL2CPP --suite=playmode --testfilter=Counters --testproject=./TestProjects/HDRP_PerformanceTests --timeout=7200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -206,15 +206,15 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_run_build_il2cpp_Linear_CUSTOM-RE
     name: HDRP_PerformanceTests on Linux_Vulkan_performance_run_build_il2cpp_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::VM
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         flavor: b1.xlarge
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        CACHE_ARGS: '{{cache.flags}}'
         CUSTOM_REVISION: custom_revision_not_set
         GIT_BRANCH: master
-        CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -228,7 +228,7 @@ HDRP_PerformanceTests_Linux_Vulkan_performance_run_build_il2cpp_Linear_CUSTOM-RE
       -  command: sudo unity-downloader-cli --source-file unity_revision.txt -c editor -c il2cpp  --wait --published-only
          retries: 2
       -  command: git checkout %GIT_BRANCH%
-      -  command: DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --extra-editor-arg="-playergraphicsapi=Vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=editmode --scripting-backend=IL2CPP --suite=editor --testfilter=Build --testproject=./TestProjects/HDRP_PerformanceTests --timeout=14400 --zero-tests-are-ok=1
+      -  command: DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/HDRP_PerformanceTests/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-vulkan" --extra-editor-arg="-playergraphicsapi=Vulkan" --loglevel=verbose --performance-project-version=. --report-performance-data --performance-project-id=HDRP --platform=editmode --scripting-backend=IL2CPP --suite=editor --testfilter=Build --testproject=./TestProjects/HDRP_PerformanceTests --timeout=14400
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0

@@ -713,6 +713,7 @@ namespace UnityEngine.Rendering.PostProcessing
                 {
                     // The camera must be reset on precull and post render to avoid issues with alpha when toggling TAA.
                     m_Camera.ResetProjectionMatrix();
+#if (ENABLE_VR_MODULE && ENABLE_VR)
                     if (m_CurrentContext.stereoActive)
                     {
                         if (RuntimeUtilities.isSinglePassStereoEnabled || m_Camera.stereoActiveEye == Camera.MonoOrStereoscopicEye.Right)
@@ -723,6 +724,7 @@ namespace UnityEngine.Rendering.PostProcessing
                                 m_Camera.projectionMatrix = m_Camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Left);
                         }
                     }
+#endif
                 }
             }
         }
@@ -1228,7 +1230,7 @@ namespace UnityEngine.Rendering.PostProcessing
                 context.destination = tempTarget;
 
                 // Handle FXAA's keep alpha mode
-                if (antialiasingMode == Antialiasing.FastApproximateAntialiasing && !fastApproximateAntialiasing.keepAlpha && HasAlpha(context.sourceFormat))
+                if (antialiasingMode == Antialiasing.FastApproximateAntialiasing && !fastApproximateAntialiasing.keepAlpha && RuntimeUtilities.hasAlpha(context.sourceFormat))
                     uberSheet.properties.SetFloat(ShaderIDs.LumaInAlpha, 1f);
             }
 
@@ -1346,7 +1348,7 @@ namespace UnityEngine.Rendering.PostProcessing
                         : "FXAA"
                     );
 
-                    if (HasAlpha(context.sourceFormat))
+                    if (RuntimeUtilities.hasAlpha(context.sourceFormat))
                     {
                         if (fastApproximateAntialiasing.keepAlpha)
                             uberSheet.EnableKeyword("FXAA_KEEP_ALPHA");
@@ -1426,22 +1428,6 @@ namespace UnityEngine.Rendering.PostProcessing
             bool autoExpo = GetBundle<AutoExposure>().settings.IsEnabledAndSupported(context);
             bool lightMeter = debugLayer.lightMeter.IsRequestedAndSupported(context);
             return autoExpo || lightMeter;
-        }
-
-        static bool HasAlpha(RenderTextureFormat format)
-        {
-            return
-                format == RenderTextureFormat.ARGB32
-                || format == RenderTextureFormat.ARGBHalf
-                || format == RenderTextureFormat.ARGB4444
-                || format == RenderTextureFormat.ARGB1555
-                || format == RenderTextureFormat.ARGB2101010
-                || format == RenderTextureFormat.ARGB64
-                || format == RenderTextureFormat.ARGBFloat
-                || format == RenderTextureFormat.ARGBInt
-                || format == RenderTextureFormat.BGRA32
-                || format == RenderTextureFormat.RGBAUShort
-                || format == RenderTextureFormat.BGRA10101010_XR;
         }
     }
 }

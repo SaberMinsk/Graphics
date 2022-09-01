@@ -4,6 +4,27 @@ All notable changes to this project template will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [15.0.0] - 2022-07-06
+
+### Fixed
+- Fixed issue with new hdrp cubemap atlas system
+
+## [13.4.1] - 2022-03-16
+
+### Added
+- Added PS5 to QualitySettings.asset.
+- Added GameCore platforms to QualitySettings.asset.
+
+## [13.4.0] - 2021-10-18
+
+Version Updated
+The version number for this package has increased due to a version update of a related graphics package.
+
+## [13.3.0] - 2021-10-18
+
+### Fixed
+- Convert Unity Sphere to new one
+
 ## [13.2.0] - 2021-10-18
 
 ### Fixed

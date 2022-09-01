@@ -11,15 +11,15 @@ Lightmapping_Linux_OpenGlCore_editmode_mono_Linear_trunk:
     name: Lightmapping on Linux_OpenGlCore_editmode_mono_Linear on version trunk
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         model: rtx2080
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
-        CUSTOM_REVISION: '{{trunk.changeset.id}}'
         CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
+        CUSTOM_REVISION: '{{trunk.changeset.id}}'
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -35,7 +35,7 @@ Lightmapping_Linux_OpenGlCore_editmode_mono_Linear_trunk:
       -  command: sudo apt-get install -y ocl-icd-opencl-dev
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-glcore" --platform=editmode --scripting-backend=Mono2x --suite=editor --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping --zero-tests-are-ok=1
+                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-glcore" --platform=editmode --scripting-backend=Mono2x --suite=editor --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -51,15 +51,15 @@ Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_trunk:
     name: Lightmapping on Linux_OpenGlCore_Standalone_mono_Linear on version trunk
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         model: rtx2080
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
-        CUSTOM_REVISION: '{{trunk.changeset.id}}'
         CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
+        CUSTOM_REVISION: '{{trunk.changeset.id}}'
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -67,7 +67,7 @@ Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_trunk:
       -  command: sudo apt-get install -y ocl-icd-opencl-dev
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --platform=StandaloneLinux64 --player-connection-ip=auto --player-load-path=players --suite=playmode --timeout=1200 --zero-tests-are-ok=1
+                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --platform=StandaloneLinux64 --player-connection-ip=auto --player-load-path=players --suite=playmode --timeout=1200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -85,15 +85,15 @@ Build_Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_trunk:
     name: Build Lightmapping on Linux_OpenGlCore_mono_Linear_Standalone_build_Player on version trunk
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         model: rtx2080
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
-        CUSTOM_REVISION: '{{trunk.changeset.id}}'
         CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
+        CUSTOM_REVISION: '{{trunk.changeset.id}}'
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -109,7 +109,7 @@ Build_Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_trunk:
       -  command: sudo apt-get install -y ocl-icd-opencl-dev
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/Lightmapping/test-results --build-only --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --platform=StandaloneLinux64 --player-save-path=players --scripting-backend=Mono2x --suite=playmode --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping --timeout=1200
+                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --build-only --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --platform=StandaloneLinux64 --player-save-path=players --scripting-backend=Mono2x --suite=playmode --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping --timeout=1200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -128,15 +128,15 @@ Lightmapping_Linux_OpenGlCore_editmode_mono_Linear_CUSTOM-REVISION:
     name: Lightmapping on Linux_OpenGlCore_editmode_mono_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         model: rtx2080
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
-        CUSTOM_REVISION: custom_revision_not_set
         CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
+        CUSTOM_REVISION: custom_revision_not_set
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -152,7 +152,7 @@ Lightmapping_Linux_OpenGlCore_editmode_mono_Linear_CUSTOM-REVISION:
       -  command: sudo apt-get install -y ocl-icd-opencl-dev
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-glcore" --platform=editmode --scripting-backend=Mono2x --suite=editor --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping --zero-tests-are-ok=1
+                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --extra-editor-arg="-force-glcore" --platform=editmode --scripting-backend=Mono2x --suite=editor --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -168,15 +168,15 @@ Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_CUSTOM-REVISION:
     name: Lightmapping on Linux_OpenGlCore_Standalone_mono_Linear on version CUSTOM-REVISION
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         model: rtx2080
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
-        CUSTOM_REVISION: custom_revision_not_set
         CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
+        CUSTOM_REVISION: custom_revision_not_set
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -184,7 +184,7 @@ Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_CUSTOM-REVISION:
       -  command: sudo apt-get install -y ocl-icd-opencl-dev
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --platform=StandaloneLinux64 --player-connection-ip=auto --player-load-path=players --suite=playmode --timeout=1200 --zero-tests-are-ok=1
+                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --platform=StandaloneLinux64 --player-connection-ip=auto --player-load-path=players --suite=playmode --timeout=1200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0
@@ -202,15 +202,15 @@ Build_Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_CUSTOM-REVISION:
     name: Build Lightmapping on Linux_OpenGlCore_mono_Linear_Standalone_build_Player on version CUSTOM-REVISION
     agent:
         type: Unity::VM::GPU
-        image: package-ci/ubuntu:stable
+        image: package-ci/ubuntu:v2.0.0-947723
         model: rtx2080
         flavor: b1.large
     variables:
-        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
-        CUSTOM_REVISION: custom_revision_not_set
         CACHE_ARGS: '{{cache.flags}}'
-        UTR_VERSION: "current"
+        CUSTOM_REVISION: custom_revision_not_set
         TEST_FILTER: .*
+        UPM_REGISTRY: https://artifactory-slo.bf.unity3d.com/artifactory/api/npm/upm-candidates
+        UTR_VERSION: "current"
     commands:
       -  command: curl -s https://artifactory.prd.it.unity3d.com/artifactory/unity-tools-local/utr-standalone/utr --output utr
          retries: 2
@@ -226,7 +226,7 @@ Build_Lightmapping_Linux_OpenGlCore_Standalone_mono_Linear_CUSTOM-REVISION:
       -  command: sudo apt-get install -y ocl-icd-opencl-dev
       -  command: |5-
                 export GIT_REVISIONDATE=`git rev-parse HEAD | git show -s --format=%cI`
-                DISPLAY=:0.0 ./utr $CACHE_ARGS --artifacts_path=TestProjects/Lightmapping/test-results --build-only --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --platform=StandaloneLinux64 --player-save-path=players --scripting-backend=Mono2x --suite=playmode --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping --timeout=1200
+                DISPLAY=:0.0 ./utr --artifacts_path=TestProjects/Lightmapping/test-results --build-only --editor-location=.Editor --extra-editor-arg="-colorspace=Linear" --platform=StandaloneLinux64 --player-save-path=players --scripting-backend=Mono2x --suite=playmode --testfilter=$TEST_FILTER --testproject=./TestProjects/Lightmapping --timeout=1200
     after:
       -  command: pip3 install ant_instability_detection --index-url https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade || exit 0
       -  command: find_instabilities || exit 0

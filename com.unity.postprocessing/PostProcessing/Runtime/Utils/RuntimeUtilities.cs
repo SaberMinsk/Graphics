@@ -865,16 +865,16 @@ namespace UnityEngine.Rendering.PostProcessing
         {
             get
             {
-#if UNITY_ANDROID || UNITY_IPHONE || UNITY_TVOS || UNITY_SWITCH || UNITY_EDITOR
+#if !UNITY_2019_3_OR_NEWER && (UNITY_ANDROID || UNITY_IPHONE || UNITY_TVOS || UNITY_EDITOR)
                 RenderTextureFormat format = RenderTextureFormat.RGB111110Float;
 #if UNITY_EDITOR
                 var target = EditorUserBuildSettings.activeBuildTarget;
-                if (target != BuildTarget.Android && target != BuildTarget.iOS && target != BuildTarget.tvOS && target != BuildTarget.Switch)
+                if (target != BuildTarget.Android && target != BuildTarget.iOS && target != BuildTarget.tvOS)
                     return RenderTextureFormat.DefaultHDR;
 #endif // UNITY_EDITOR
                 if (format.IsSupported())
                     return format;
-#endif // UNITY_ANDROID || UNITY_IPHONE || UNITY_TVOS || UNITY_SWITCH || UNITY_EDITOR
+#endif // #if !UNITY_2019_3_OR_NEWER && (UNITY_ANDROID || UNITY_IPHONE || UNITY_TVOS || UNITY_EDITOR)
                 return RenderTextureFormat.DefaultHDR;
             }
         }
@@ -890,6 +890,17 @@ namespace UnityEngine.Rendering.PostProcessing
                 format == RenderTextureFormat.RGFloat || format == RenderTextureFormat.RGHalf ||
                 format == RenderTextureFormat.RFloat || format == RenderTextureFormat.RHalf ||
                 format == RenderTextureFormat.RGB111110Float;
+        }
+
+        /// <summary>
+        /// Checks if a given render texture format has an alpha channel.
+        /// </summary>
+        /// <param name="format">The format to test</param>
+        /// <returns><c>true</c> if the format has an alpha channel, <c>false</c> otherwise</returns>
+        internal static bool hasAlpha(RenderTextureFormat format)
+        {
+            UnityEngine.Experimental.Rendering.GraphicsFormat gformat = UnityEngine.Experimental.Rendering.GraphicsFormatUtility.GetGraphicsFormat(format, RenderTextureReadWrite.Default);
+            return UnityEngine.Experimental.Rendering.GraphicsFormatUtility.HasAlphaChannel(gformat);
         }
 
         /// <summary>
