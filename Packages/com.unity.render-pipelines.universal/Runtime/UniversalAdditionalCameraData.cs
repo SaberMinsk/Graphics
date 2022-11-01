@@ -730,6 +730,16 @@ namespace UnityEngine.Rendering.Universal
             {
                 m_RequiresDepthTextureOption = (m_RequiresDepthTexture) ? CameraOverrideOption.On : CameraOverrideOption.Off;
                 m_RequiresOpaqueTextureOption = (m_RequiresColorTexture) ? CameraOverrideOption.On : CameraOverrideOption.Off;
+                m_Version = 2;
+            }
+        }
+
+        /// <inheritdoc/>
+        public void OnValidate()
+        {
+            if (m_CameraType == CameraRenderType.Overlay && m_Camera != null)
+            {
+                m_Camera.clearFlags = CameraClearFlags.Nothing;
             }
         }
 

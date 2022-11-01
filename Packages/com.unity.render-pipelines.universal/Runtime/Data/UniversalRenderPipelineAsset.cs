@@ -38,6 +38,12 @@ namespace UnityEngine.Rendering.Universal
     public enum SoftShadowQuality
     {
         /// <summary>
+        /// Use this to choose the setting set on the pipeline asset.
+        /// </summary>
+        [InspectorName("Use settings from Render Pipeline Asset")]
+        UsePipelineSettings,
+
+        /// <summary>
         /// Low quality soft shadows. Recommended for mobile. 4 PCF sample filtering.
         /// </summary>
         Low,
@@ -456,6 +462,7 @@ namespace UnityEngine.Rendering.Universal
         [SerializeField] bool m_SoftShadowsSupported = false;
         [SerializeField] bool m_ConservativeEnclosingSphere = false;
         [SerializeField] int m_NumIterationsEnclosingSphere = 64;
+        [SerializeField] SoftShadowQuality m_SoftShadowQuality = SoftShadowQuality.Medium;
 
         // Light Cookie Settings
         [SerializeField] LightCookieResolution m_AdditionalLightsCookieResolution = LightCookieResolution._2048;
@@ -673,6 +680,18 @@ namespace UnityEngine.Rendering.Universal
             DestroyRenderers();
             var pipeline = new UniversalRenderPipeline(this);
             CreateRenderers();
+
+            // Blitter can only be initialized after renderers have been created and ResourceReloader has been
+            // called on potentially empty shader resources
+            foreach (var data in m_RendererDataList)
+            {
+                if (data is UniversalRendererData universalData)
+                {
+                    Blitter.Initialize(universalData.shaders.coreBlitPS, universalData.shaders.coreBlitColorAndDepthPS);
+                    break;
+                }
+            }
+
             return pipeline;
         }
 
@@ -1267,6 +1286,15 @@ namespace UnityEngine.Rendering.Universal
         }
 
         /// <summary>
+        /// Light default Soft Shadow Quality.
+        /// </summary>
+        internal SoftShadowQuality softShadowQuality
+        {
+            get { return m_SoftShadowQuality; }
+            set { m_SoftShadowQuality = value; }
+        }
+
+        /// <summary>
         /// Specifies if this <c>UniversalRenderPipelineAsset</c> should use dynamic batching.
         /// </summary>
         /// <see href="https://docs.unity3d.com/Manual/DrawCallBatching.html"/>
@@ -1337,7 +1365,7 @@ namespace UnityEngine.Rendering.Universal
         /// <summary>
         /// Controls whether the RenderGraph render path is enabled.
         /// </summary>
-        internal bool enableRenderGraph
+        public bool enableRenderGraph
         {
             get { return m_EnableRenderGraph; }
             set { m_EnableRenderGraph = value; }
