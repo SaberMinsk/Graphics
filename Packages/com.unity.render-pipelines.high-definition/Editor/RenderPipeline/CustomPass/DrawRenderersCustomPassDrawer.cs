@@ -16,7 +16,7 @@ namespace UnityEditor.Rendering.HighDefinition
     /// Custom drawer for the draw renderers pass
     /// </summary>
     [CustomPassDrawerAttribute(typeof(DrawRenderersCustomPass))]
-    class DrawRenderersCustomPassDrawer : CustomPassDrawer
+    public class DrawRenderersCustomPassDrawer : CustomPassDrawer
     {
         private class Styles
         {
