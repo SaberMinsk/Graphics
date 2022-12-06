@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -12,6 +12,8 @@ namespace UnityEditor.Rendering.HighDefinition
         DiffusionProfileSettings[] m_DiffusionProfileReferences = new DiffusionProfileSettings[0];
         [SerializeField]
         Material[] m_MaterialReferences = new Material[0];
+
+#if UNITY_EDITOR
 
         public void SetDiffusionProfileReference(int index, DiffusionProfileSettings profile)
         {
@@ -67,6 +69,7 @@ namespace UnityEditor.Rendering.HighDefinition
 
             return matExternalRefs;
         }
+		
+#endif
     }
 }
-#endif
