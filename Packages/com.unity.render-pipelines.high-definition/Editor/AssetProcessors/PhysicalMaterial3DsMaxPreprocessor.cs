@@ -15,6 +15,8 @@ namespace UnityEditor.Rendering.HighDefinition
         static readonly int k_Order = -960;
         static readonly string k_ShaderPath = "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/PhysicalMaterial3DsMax/PhysicalMaterial3DsMax.shadergraph";
 
+        private Shader HDRPLit => Shader.Find("HDRP/Lit");
+
         public override uint GetVersion()
         {
             return k_Version;
@@ -55,7 +57,11 @@ namespace UnityEditor.Rendering.HighDefinition
 
             if (Is3DsMaxPhysicalMaterial(description))
             {
-                CreateFrom3DsPhysicalMaterial(description, material, clips);
+                // https://jira.saber3d.net/browse/DCD-2972
+                // Temporary change until Unity fixes the bug.
+                // The bug report has been sent.
+                // CreateFrom3DsPhysicalMaterial(description, material, clips);
+                material.shader = HDRPLit;
             }
             else if (Is3DsMaxSimplifiedPhysicalMaterial(description))
             {
